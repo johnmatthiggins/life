@@ -13,15 +13,14 @@ int main(int argc, char** argv) {
     uint8_t** screen2 = (uint8_t**)malloc(sizeof(uint8_t*) * SCREEN_SIZE);
     load_zeros(screen2);
 
-    create_glider(screen1, 10, 10);
-    create_glider(screen1, 20, 10);
+    create_acorn(screen1, 10, 10);
 
     uint8_t** old = screen1;
     uint8_t** new = screen2;
     print_board(old);
 
     for (int i = 0; i < 1000; ++i) {
-        sleep(1);
+        usleep(100000);
         next_generation(old, new);
         print_board(new);
 
@@ -60,8 +59,27 @@ void create_glider(uint8_t** board, size_t x, size_t y) {
     board[x][y - 2] = 1;
 }
 
+void create_acorn(uint8_t** board, size_t x, size_t y) {
+    board[x + 1][y] = 1;
+    board[x + 2][y] = 1;
+    board[x + 3][y] = 1;
+
+    board[x][y - 1] = 1;
+    
+    board[x - 2][y] = 1;
+    board[x - 3][y] = 1;
+
+    board[x - 2][y - 2] = 1;
+}
+
 void print_board(uint8_t** board) {
+    for (size_t i = 0; i < SCREEN_SIZE + 2; ++i) {
+        printf("X");
+    }
+    printf("\n");
+
     for (size_t i = 0; i < SCREEN_SIZE; ++i) {
+        printf("X");
         for (size_t j = 0; j < SCREEN_SIZE; ++j) {
             if (board[i][j]) {
                 printf("@");
@@ -69,8 +87,13 @@ void print_board(uint8_t** board) {
                 printf(" ");
             }
         }
-        printf("\n");
+        printf("X\n");
     }
+
+    for (size_t i = 0; i < SCREEN_SIZE + 2; ++i) {
+        printf("X");
+    }
+    printf("\n");
 }
 
 void next_generation(uint8_t** old_board, uint8_t** new_board) {
