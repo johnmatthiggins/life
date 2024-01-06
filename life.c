@@ -11,21 +11,18 @@ int main(int argc, char** argv) {
     load_zeros(screen1);
 
     uint8_t** screen2 = (uint8_t**)malloc(sizeof(uint8_t*) * SCREEN_SIZE);
-    load_zeros(screen1);
-    printf("loaded zeros...\n");
+    load_zeros(screen2);
 
     create_glider(screen1, 10, 10);
-    printf("created glider\n");
+    create_glider(screen1, 20, 10);
 
     uint8_t** old = screen1;
     uint8_t** new = screen2;
     print_board(old);
 
     for (int i = 0; i < 1000; ++i) {
-        printf("entered loop\n");
         sleep(1);
         next_generation(old, new);
-        printf("generated generation\n");
         print_board(new);
 
         // swap boards...
@@ -41,7 +38,11 @@ int main(int argc, char** argv) {
 }
 
 void free_screen_buffer(uint8_t** buffer) {
-    // pass
+    for (size_t i = 0; i < SCREEN_SIZE; ++i) {
+        free(buffer[i]);
+    }
+
+    free(buffer);
 }
 
 void load_zeros(uint8_t** buffer) {
@@ -76,9 +77,9 @@ void next_generation(uint8_t** old_board, uint8_t** new_board) {
     int neighbors;
 
     // top right
-    neighbors = (old_board[0][SCREEN_SIZE - 2])
-        + (old_board[1][SCREEN_SIZE - 1])
-        + (old_board[1][SCREEN_SIZE - 2]);
+    neighbors = old_board[0][SCREEN_SIZE - 2]
+        + old_board[1][SCREEN_SIZE - 1]
+        + old_board[1][SCREEN_SIZE - 2];
 
     if (old_board[0][SCREEN_SIZE - 1]) {
         new_board[0][SCREEN_SIZE - 1] = 1 - (neighbors < 2) - (neighbors > 3);
@@ -97,8 +98,8 @@ void next_generation(uint8_t** old_board, uint8_t** new_board) {
 
     // bottom left
     neighbors = old_board[SCREEN_SIZE - 1][1]
-        + (old_board[SCREEN_SIZE - 2][1])
-        + (old_board[SCREEN_SIZE - 2][0]);
+        + old_board[SCREEN_SIZE - 2][1]
+        + old_board[SCREEN_SIZE - 2][0];
 
     if (old_board[SCREEN_SIZE - 1][0]) {
         new_board[SCREEN_SIZE - 1][0] = 1 - (neighbors < 2) - (neighbors > 3);
@@ -108,8 +109,8 @@ void next_generation(uint8_t** old_board, uint8_t** new_board) {
 
     // bottom right
     neighbors = old_board[SCREEN_SIZE - 2][SCREEN_SIZE - 1]
-        + (old_board[SCREEN_SIZE - 2][SCREEN_SIZE - 2])
-        + (old_board[SCREEN_SIZE - 1][SCREEN_SIZE - 2]);
+        + old_board[SCREEN_SIZE - 2][SCREEN_SIZE - 2]
+        + old_board[SCREEN_SIZE - 1][SCREEN_SIZE - 2];
 
     if (old_board[SCREEN_SIZE - 1][0]) {
         new_board[SCREEN_SIZE - 1][0] = 1 - (neighbors < 2) - (neighbors > 3);
@@ -118,14 +119,14 @@ void next_generation(uint8_t** old_board, uint8_t** new_board) {
     }
     
     // top row (no corners)
-    for (size_t i = 1; i < SCREEN_SIZE - 2; ++i) {
+    for (size_t i = 1; i < SCREEN_SIZE - 1; ++i) {
         size_t x = i;
         size_t y = 0;
         neighbors = old_board[x - 1][y]
-            + (old_board[x + 1][y])
-            + (old_board[x + 1][y + 1])
-            + (old_board[x][y + 1])
-            + (old_board[x - 1][y + 1]);
+            + old_board[x + 1][y]
+            + old_board[x + 1][y + 1]
+            + old_board[x][y + 1]
+            + old_board[x - 1][y + 1];
 
         if (old_board[x][y]) {
             new_board[x][y] = 1 - (neighbors < 2) - (neighbors > 3);
@@ -135,7 +136,7 @@ void next_generation(uint8_t** old_board, uint8_t** new_board) {
     }
 
     // bottom row (no corners)
-    for (size_t i = 1; i < SCREEN_SIZE - 2; ++i) {
+    for (size_t i = 1; i < SCREEN_SIZE - 1; ++i) {
         size_t x = i;
         size_t y = SCREEN_SIZE - 1;
 
@@ -153,7 +154,7 @@ void next_generation(uint8_t** old_board, uint8_t** new_board) {
     }
 
     // left row (no corners)
-    for (size_t i = 1; i < SCREEN_SIZE - 2; ++i) {
+    for (size_t i = 1; i < SCREEN_SIZE - 1; ++i) {
         size_t x = 0;
         size_t y = i;
 
@@ -171,7 +172,7 @@ void next_generation(uint8_t** old_board, uint8_t** new_board) {
     }
 
     // right row (no corners)
-    for (size_t i = 1; i < SCREEN_SIZE - 2; ++i) {
+    for (size_t i = 1; i < SCREEN_SIZE - 1; ++i) {
         size_t x = SCREEN_SIZE - 1;
         size_t y = i;
 
@@ -190,7 +191,7 @@ void next_generation(uint8_t** old_board, uint8_t** new_board) {
     
     // all squares inside
     for (size_t i = 1; i < SCREEN_SIZE - 1; ++i) {
-        for (size_t j = 1; i < SCREEN_SIZE - 1; ++j) {
+        for (size_t j = 1; j < SCREEN_SIZE - 1; ++j) {
             next_cell(old_board, new_board, i, j);
         }
     }
