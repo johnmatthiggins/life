@@ -4,7 +4,7 @@
 
 #define LIFE_H
 
-#define SCREEN_SIZE (20)
+#define SCREEN_SIZE (50)
 
 void load_zeros(uint8_t** buffer);
 void free_screen_buffer(uint8_t** buffer);

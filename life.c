@@ -82,7 +82,7 @@ void print_board(uint8_t** board) {
         printf("X");
         for (size_t j = 0; j < SCREEN_SIZE; ++j) {
             if (board[i][j]) {
-                printf("@");
+                printf("O");
             } else {
                 printf(" ");
             }
