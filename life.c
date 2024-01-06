@@ -7,10 +7,10 @@
 #include "life.h"
 
 int main(int argc, char** argv) {
-    uint8_t** screen1 = (uint8_t**)malloc(sizeof(uint8_t*) * SCREEN_SIZE);
+    uint8_t** screen1 = (uint8_t**)malloc(sizeof(uint8_t*) * SCREEN_WIDTH);
     load_zeros(screen1);
 
-    uint8_t** screen2 = (uint8_t**)malloc(sizeof(uint8_t*) * SCREEN_SIZE);
+    uint8_t** screen2 = (uint8_t**)malloc(sizeof(uint8_t*) * SCREEN_WIDTH);
     load_zeros(screen2);
 
     create_acorn(screen1, 10, 10);
@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
 }
 
 void free_screen_buffer(uint8_t** buffer) {
-    for (size_t i = 0; i < SCREEN_SIZE; ++i) {
+    for (size_t i = 0; i < SCREEN_WIDTH; ++i) {
         free(buffer[i]);
     }
 
@@ -45,8 +45,8 @@ void free_screen_buffer(uint8_t** buffer) {
 }
 
 void load_zeros(uint8_t** buffer) {
-    for (int i = 0; i < SCREEN_SIZE; ++i) {
-        uint8_t* inner_buffer = (uint8_t*)malloc(sizeof(uint8_t) * SCREEN_SIZE);
+    for (int i = 0; i < SCREEN_WIDTH; ++i) {
+        uint8_t* inner_buffer = (uint8_t*)malloc(sizeof(uint8_t) * SCREEN_HEIGHT);
         buffer[i] = inner_buffer;
     }
 }
@@ -73,41 +73,101 @@ void create_acorn(uint8_t** board, size_t x, size_t y) {
 }
 
 void print_board(uint8_t** board) {
-    for (size_t i = 0; i < SCREEN_SIZE + 2; ++i) {
+    for (size_t i = 0; i < (SCREEN_WIDTH / 2) + 2; ++i) {
         printf("X");
     }
     printf("\n");
 
-    for (size_t i = 0; i < SCREEN_SIZE; ++i) {
+    for (size_t i = 0; i < SCREEN_HEIGHT; i += 2) {
         printf("X");
-        for (size_t j = 0; j < SCREEN_SIZE; ++j) {
-            if (board[i][j]) {
-                printf("O");
-            } else {
-                printf(" ");
-            }
+        for (size_t j = 0; j < SCREEN_WIDTH; j += 2) {
+            uint8_t bits = board[j][i]
+                | board[j + 1][i] << 1
+                | board[j][i + 1] << 2
+                | board[j + 1][i + 1] << 3;
+
+            print_square(bits);
+
+            /* if (board[j][i]) { */
+            /*     printf("O"); */
+            /* } else { */
+            /*     printf(" "); */
+            /* } */
         }
         printf("X\n");
     }
 
-    for (size_t i = 0; i < SCREEN_SIZE + 2; ++i) {
+    for (size_t i = 0; i < (SCREEN_WIDTH / 2) + 2; ++i) {
         printf("X");
     }
     printf("\n");
+}
+
+void print_square(uint8_t bits) {
+    switch (bits) {
+        case 0b0000:
+            printf(" ");
+            break;
+        case 0b1000:
+            printf("%s", "\xE2\x96\x98");
+            break;
+        case 0b0100:
+            printf("%s", "\xE2\x96\x9D");
+            break;
+        case 0b0010:
+            printf("%s", "\xE2\x96\x96");
+            break;
+        case 0b0001:
+            printf("%s", "\xE2\x96\x97");
+            break;
+        case 0b1100:
+            printf("%s", "\xE2\x96\x80");
+            break;
+        case 0b0011:
+            printf("%s", "\xE2\x96\x84");
+            break;
+        case 0b1001:
+            printf("%s", "\xE2\x96\x9A");
+            break;
+        case 0b0110:
+            printf("%s", "\xE2\x96\x9E");
+            break;
+        case 0b1010:
+            printf("%s", "\xE2\x96\x8C");
+            break;
+        case 0b0101:
+            printf("%s", "\xE2\x96\x90");
+            break;
+        case 0b1101:
+            printf("%s", "\xE2\x96\x9C");
+            break;
+        case 0b1011:
+            printf("%s", "\xE2\x96\x99");
+            break;
+        case 0b1110:
+            printf("%s", "\xE2\x96\x9B");
+            break;
+        case 0b0111:
+            printf("%s", "\xE2\x96\x9F");
+            break;
+        default:
+            printf(" ");
+            break;
+    }
 }
 
 void next_generation(uint8_t** old_board, uint8_t** new_board) {
     int neighbors;
 
     // top right
-    neighbors = old_board[0][SCREEN_SIZE - 2]
-        + old_board[1][SCREEN_SIZE - 1]
-        + old_board[1][SCREEN_SIZE - 2];
+    neighbors = old_board[0][SCREEN_HEIGHT - 2]
+        + old_board[1][SCREEN_HEIGHT - 1]
+        + old_board[1][SCREEN_HEIGHT - 2];
 
-    if (old_board[0][SCREEN_SIZE - 1]) {
-        new_board[0][SCREEN_SIZE - 1] = 1 - (neighbors < 2) - (neighbors > 3);
+    if (old_board[0][SCREEN_HEIGHT - 1]) {
+        new_board[0][SCREEN_HEIGHT - 1] = 1 - (neighbors < 2) - (neighbors > 3);
     } else {
-        new_board[0][SCREEN_SIZE - 1] = neighbors == 3;
+        new_board[0][SCREEN_HEIGHT - 1] = neighbors == 3;
     }
 
     // top left
@@ -120,29 +180,29 @@ void next_generation(uint8_t** old_board, uint8_t** new_board) {
     }
 
     // bottom left
-    neighbors = old_board[SCREEN_SIZE - 1][1]
-        + old_board[SCREEN_SIZE - 2][1]
-        + old_board[SCREEN_SIZE - 2][0];
+    neighbors = old_board[SCREEN_WIDTH - 1][1]
+        + old_board[SCREEN_WIDTH - 2][1]
+        + old_board[SCREEN_WIDTH - 2][0];
 
-    if (old_board[SCREEN_SIZE - 1][0]) {
-        new_board[SCREEN_SIZE - 1][0] = 1 - (neighbors < 2) - (neighbors > 3);
+    if (old_board[SCREEN_WIDTH - 1][0]) {
+        new_board[SCREEN_WIDTH - 1][0] = 1 - (neighbors < 2) - (neighbors > 3);
     } else {
-        new_board[SCREEN_SIZE - 1][0] = neighbors == 3;
+        new_board[SCREEN_WIDTH - 1][0] = neighbors == 3;
     }
 
     // bottom right
-    neighbors = old_board[SCREEN_SIZE - 2][SCREEN_SIZE - 1]
-        + old_board[SCREEN_SIZE - 2][SCREEN_SIZE - 2]
-        + old_board[SCREEN_SIZE - 1][SCREEN_SIZE - 2];
+    neighbors = old_board[SCREEN_WIDTH - 2][SCREEN_HEIGHT - 1]
+        + old_board[SCREEN_WIDTH - 2][SCREEN_HEIGHT - 2]
+        + old_board[SCREEN_WIDTH - 1][SCREEN_HEIGHT - 2];
 
-    if (old_board[SCREEN_SIZE - 1][0]) {
-        new_board[SCREEN_SIZE - 1][0] = 1 - (neighbors < 2) - (neighbors > 3);
+    if (old_board[SCREEN_WIDTH - 1][0]) {
+        new_board[SCREEN_WIDTH - 1][0] = 1 - (neighbors < 2) - (neighbors > 3);
     } else {
-        new_board[SCREEN_SIZE - 1][0] = neighbors == 3;
+        new_board[SCREEN_WIDTH - 1][0] = neighbors == 3;
     }
     
     // top row (no corners)
-    for (size_t i = 1; i < SCREEN_SIZE - 1; ++i) {
+    for (size_t i = 1; i < SCREEN_WIDTH - 1; ++i) {
         size_t x = i;
         size_t y = 0;
         neighbors = old_board[x - 1][y]
@@ -159,9 +219,9 @@ void next_generation(uint8_t** old_board, uint8_t** new_board) {
     }
 
     // bottom row (no corners)
-    for (size_t i = 1; i < SCREEN_SIZE - 1; ++i) {
+    for (size_t i = 1; i < SCREEN_WIDTH - 1; ++i) {
         size_t x = i;
-        size_t y = SCREEN_SIZE - 1;
+        size_t y = SCREEN_HEIGHT - 1;
 
         neighbors = old_board[x - 1][y]
             + (old_board[x + 1][y])
@@ -177,7 +237,7 @@ void next_generation(uint8_t** old_board, uint8_t** new_board) {
     }
 
     // left row (no corners)
-    for (size_t i = 1; i < SCREEN_SIZE - 1; ++i) {
+    for (size_t i = 1; i < SCREEN_HEIGHT - 1; ++i) {
         size_t x = 0;
         size_t y = i;
 
@@ -195,8 +255,8 @@ void next_generation(uint8_t** old_board, uint8_t** new_board) {
     }
 
     // right row (no corners)
-    for (size_t i = 1; i < SCREEN_SIZE - 1; ++i) {
-        size_t x = SCREEN_SIZE - 1;
+    for (size_t i = 1; i < SCREEN_HEIGHT - 1; ++i) {
+        size_t x = SCREEN_WIDTH - 1;
         size_t y = i;
 
         neighbors = old_board[x][y - 1]
@@ -213,8 +273,8 @@ void next_generation(uint8_t** old_board, uint8_t** new_board) {
     }
     
     // all squares inside
-    for (size_t i = 1; i < SCREEN_SIZE - 1; ++i) {
-        for (size_t j = 1; j < SCREEN_SIZE - 1; ++j) {
+    for (size_t i = 1; i < SCREEN_WIDTH - 1; ++i) {
+        for (size_t j = 1; j < SCREEN_HEIGHT - 1; ++j) {
             next_cell(old_board, new_board, i, j);
         }
     }
