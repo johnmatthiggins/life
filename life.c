@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
     uint8_t** screen2 = (uint8_t**)malloc(sizeof(uint8_t*) * SCREEN_WIDTH);
     load_zeros(screen2);
 
-    create_acorn(screen1, 10, 10);
+    create_acorn(screen1, 20, 20);
 
     uint8_t** old = screen1;
     uint8_t** new = screen2;
@@ -87,12 +87,6 @@ void print_board(uint8_t** board) {
                 | board[j + 1][i + 1] << 3;
 
             print_square(bits);
-
-            /* if (board[j][i]) { */
-            /*     printf("O"); */
-            /* } else { */
-            /*     printf(" "); */
-            /* } */
         }
         printf("X\n");
     }
