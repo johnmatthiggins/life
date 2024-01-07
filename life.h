@@ -4,8 +4,32 @@
 
 #define LIFE_H
 
-#define SCREEN_HEIGHT (100)
+#define SCREEN_HEIGHT (50)
 #define SCREEN_WIDTH (200)
+
+#define RIGHT_HALF_BLOCK    "\xE2\x96\x90"
+#define LEFT_HALF_BLOCK     "\xE2\x96\x8C"
+
+#define TOP_HALF_BLOCK    "\xE2\x96\x80"
+#define BOTTOM_HALF_BLOCK "\xE2\x96\x84"
+
+// "\xE2\x96\x"
+
+#define SINGLE_TOP_LEFT     "\xE2\x96\x98"
+#define SINGLE_TOP_RIGHT    "\xE2\x96\x9D"
+#define SINGLE_BOTTOM_LEFT  "\xE2\x96\x96"
+#define SINGLE_BOTTOM_RIGHT "\xE2\x96\x97"
+
+#define L_BLOCK     "\xE2\x96\x99"
+#define SEVEN_BLOCK "\xE2\x96\x9C"
+#define P_BLOCK     "\xE2\x96\x9B"
+#define J_BLOCK     "\xE2\x96\x9F"
+
+#define EMPTY_BLOCK  " "
+#define FILLED_BLOCK "\xE2\x96\x88"
+
+#define DIAGONAL_LR_BLOCK "\xE2\x96\x9A"
+#define DIAGONAL_RL_BLOCK "\xE2\x96\x9E"
 
 void load_zeros(uint8_t** buffer);
 void free_screen_buffer(uint8_t** buffer);

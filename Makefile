@@ -1,5 +1,5 @@
 build:
-	gcc life.c -o life
+	gcc-13 life.c -o life
 
 build-debug:
-	gcc life.c -o life -g
+	gcc-13 life.c -o life -g

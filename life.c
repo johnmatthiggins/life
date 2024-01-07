@@ -82,8 +82,8 @@ void print_board(uint8_t** board) {
         printf("X");
         for (size_t j = 0; j < SCREEN_WIDTH; j += 2) {
             uint8_t bits = board[j][i]
-                | board[j + 1][i] << 1
-                | board[j][i + 1] << 2
+                | board[j][i + 1] << 1
+                | board[j + 1][i] << 2
                 | board[j + 1][i + 1] << 3;
 
             print_square(bits);
@@ -99,50 +99,54 @@ void print_board(uint8_t** board) {
 
 void print_square(uint8_t bits) {
     switch (bits) {
+        case 0b1111:
+            // full block
+            printf("%s", FILLED_BLOCK);
+            break;
         case 0b0000:
-            printf(" ");
+            printf("%s", EMPTY_BLOCK);
             break;
         case 0b1000:
-            printf("%s", "\xE2\x96\x98");
+            printf("%s", SINGLE_TOP_LEFT);
             break;
         case 0b0100:
-            printf("%s", "\xE2\x96\x9D");
+            printf("%s", SINGLE_TOP_RIGHT);
             break;
         case 0b0010:
-            printf("%s", "\xE2\x96\x96");
+            printf("%s", SINGLE_BOTTOM_LEFT);
             break;
         case 0b0001:
-            printf("%s", "\xE2\x96\x97");
+            printf("%s", SINGLE_BOTTOM_RIGHT);
             break;
         case 0b1100:
-            printf("%s", "\xE2\x96\x80");
+            printf("%s", TOP_HALF_BLOCK);
             break;
         case 0b0011:
-            printf("%s", "\xE2\x96\x84");
+            printf("%s", BOTTOM_HALF_BLOCK);
             break;
         case 0b1001:
-            printf("%s", "\xE2\x96\x9A");
+            printf("%s", DIAGONAL_RL_BLOCK);
             break;
         case 0b0110:
-            printf("%s", "\xE2\x96\x9E");
+            printf("%s", DIAGONAL_LR_BLOCK);
             break;
         case 0b1010:
-            printf("%s", "\xE2\x96\x8C");
+            printf("%s", LEFT_HALF_BLOCK);
             break;
         case 0b0101:
-            printf("%s", "\xE2\x96\x90");
+            printf("%s", RIGHT_HALF_BLOCK);
             break;
         case 0b1101:
-            printf("%s", "\xE2\x96\x9C");
+            printf("%s", SEVEN_BLOCK);
             break;
         case 0b1011:
-            printf("%s", "\xE2\x96\x99");
+            printf("%s", L_BLOCK);
             break;
         case 0b1110:
-            printf("%s", "\xE2\x96\x9B");
+            printf("%s", P_BLOCK);
             break;
         case 0b0111:
-            printf("%s", "\xE2\x96\x9F");
+            printf("%s", J_BLOCK);
             break;
         default:
             printf(" ");
