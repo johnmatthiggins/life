@@ -4,8 +4,8 @@
 
 #define LIFE_H
 
-#define SCREEN_HEIGHT (30)
-#define SCREEN_WIDTH (30)
+#define SCREEN_HEIGHT (50)
+#define SCREEN_WIDTH (100)
 
 #define RIGHT_HALF_BLOCK    "\xE2\x96\x90"
 #define LEFT_HALF_BLOCK     "\xE2\x96\x8C"
