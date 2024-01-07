@@ -4,16 +4,14 @@
 
 #define LIFE_H
 
-#define SCREEN_HEIGHT (50)
-#define SCREEN_WIDTH (200)
+#define SCREEN_HEIGHT (30)
+#define SCREEN_WIDTH (30)
 
 #define RIGHT_HALF_BLOCK    "\xE2\x96\x90"
 #define LEFT_HALF_BLOCK     "\xE2\x96\x8C"
 
 #define TOP_HALF_BLOCK    "\xE2\x96\x80"
 #define BOTTOM_HALF_BLOCK "\xE2\x96\x84"
-
-// "\xE2\x96\x"
 
 #define SINGLE_TOP_LEFT     "\xE2\x96\x98"
 #define SINGLE_TOP_RIGHT    "\xE2\x96\x9D"
@@ -34,6 +32,7 @@
 void load_zeros(uint8_t** buffer);
 void free_screen_buffer(uint8_t** buffer);
 void create_glider(uint8_t** board, size_t x, size_t y);
+void create_block(uint8_t** board, size_t x, size_t y);
 void create_acorn(uint8_t** board, size_t x, size_t y);
 void print_board(uint8_t** board);
 void print_square(uint8_t bits);
