@@ -15,6 +15,8 @@ int main(int argc, char** argv) {
 
     create_acorn(screen1, 20, 20);
 
+    create_acorn(screen1, 41, 10);
+
     uint8_t** old = screen1;
     uint8_t** new = screen2;
 
