@@ -13,13 +13,12 @@ int main(int argc, char** argv) {
     uint8_t** screen2 = (uint8_t**)malloc(sizeof(uint8_t*) * SCREEN_WIDTH);
     load_zeros(screen2);
 
-    create_acorn(screen1, 19, 20);
+    create_acorn(screen1, 20, 20);
 
     uint8_t** old = screen1;
     uint8_t** new = screen2;
 
     print_board(old);
-    _exit(0);
 
     for (int i = 0; i < 1000; ++i) {
         usleep(100000);
@@ -68,6 +67,16 @@ void create_block(uint8_t** board, size_t x, size_t y) {
     board[x][y + 1] = 1;
 }
 
+void create_beehive(uint8_t** board, size_t x, size_t y) {
+    board[x][y - 1] = 1;
+    board[x + 1][y - 1] = 1;
+    board[x - 1][y] = 1;
+    board[x + 2][y] = 1;
+
+    board[x][y + 1] = 1;
+    board[x + 1][y + 1] = 1;
+}
+
 void create_acorn(uint8_t** board, size_t x, size_t y) {
     board[x + 1][y] = 1;
     board[x + 2][y] = 1;
@@ -90,9 +99,9 @@ void print_board(uint8_t** board) {
     for (size_t i = 0; i < SCREEN_HEIGHT; i += 2) {
         printf("X");
         for (size_t j = 0; j < SCREEN_WIDTH; j += 2) {
-            uint8_t bits = board[j][i] << 1
+            uint8_t bits = board[j][i] << 3
                 | board[j + 1][i] << 2
-                | board[j][i + 1] << 3
+                | board[j][i + 1] << 1
                 | board[j + 1][i + 1] << 0;
 
             print_square(bits);

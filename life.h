@@ -33,6 +33,7 @@ void load_zeros(uint8_t** buffer);
 void free_screen_buffer(uint8_t** buffer);
 void create_glider(uint8_t** board, size_t x, size_t y);
 void create_block(uint8_t** board, size_t x, size_t y);
+void create_beehive(uint8_t** board, size_t x, size_t y);
 void create_acorn(uint8_t** board, size_t x, size_t y);
 void print_board(uint8_t** board);
 void print_square(uint8_t bits);
