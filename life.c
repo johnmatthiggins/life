@@ -13,19 +13,17 @@ int main(int argc, char** argv) {
     uint8_t** screen2 = (uint8_t**)malloc(sizeof(uint8_t*) * SCREEN_WIDTH);
     load_zeros(screen2);
 
-    create_acorn(screen1, 20, 20);
-
-    create_acorn(screen1, 41, 10);
+    create_glider(screen1, 20, 20);
 
     uint8_t** old = screen1;
     uint8_t** new = screen2;
 
-    print_board(old);
+    print_board_ascii(old);
 
-    for (int i = 0; i < 1000; ++i) {
+    for (;;) {
         usleep(100000);
         next_generation(old, new);
-        print_board(new);
+        print_board_ascii(new);
 
         // swap boards...
         uint8_t** tmp = old;
@@ -90,6 +88,33 @@ void create_acorn(uint8_t** board, size_t x, size_t y) {
     board[x - 3][y] = 1;
 
     board[x - 2][y - 2] = 1;
+}
+
+void print_board_ascii(uint8_t** board) {
+    clear_screen();
+    printf("\xE2\x95\x94");
+    for (size_t i = 1; i < SCREEN_WIDTH + 1; ++i) {
+        printf("\xE2\x95\x90");
+    }
+    printf("\xE2\x95\x97\n");
+
+    for (size_t i = 0; i < SCREEN_HEIGHT; i++) {
+        printf("\xE2\x95\x91");
+        for (size_t j = 0; j < SCREEN_WIDTH; j++) {
+            if (board[j][i]) {
+                printf("@");
+            } else {
+                printf(" ");
+            }
+        }
+        printf("\xE2\x95\x91\n");
+    }
+
+    printf("\xE2\x95\x9A");
+    for (size_t i = 1; i < SCREEN_WIDTH + 1; ++i) {
+        printf("\xE2\x95\x90");
+    }
+    printf("\xE2\x95\x9D\n");
 }
 
 void print_board(uint8_t** board) {
@@ -313,4 +338,8 @@ void next_cell(uint8_t** old_board, uint8_t** new_board, size_t x, size_t y) {
     } else {
         new_board[x][y] = neighbors == 3;
     }
+}
+
+void clear_screen() {
+    printf("\e[1;1H\e[2J");
 }
