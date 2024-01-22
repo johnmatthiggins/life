@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <errno.h>
 
 #include "life.h"
 
@@ -13,7 +14,7 @@ int main(int argc, char** argv) {
     uint8_t** screen2 = (uint8_t**)malloc(sizeof(uint8_t*) * SCREEN_WIDTH);
     load_zeros(screen2);
 
-    create_glider(screen1, 20, 20);
+    load_entities(argc, argv, screen1);
 
     uint8_t** old = screen1;
     uint8_t** new = screen2;
@@ -49,6 +50,74 @@ void load_zeros(uint8_t** buffer) {
     for (int i = 0; i < SCREEN_WIDTH; ++i) {
         uint8_t* inner_buffer = (uint8_t*)malloc(sizeof(uint8_t) * SCREEN_HEIGHT);
         buffer[i] = inner_buffer;
+    }
+}
+
+void load_entities(int argc, char** argv, uint8_t** buffer) {
+    size_t i = 0;
+    while (i < argc) {
+        char* current_arg = argv[i];
+
+        if (strcmp(GLIDER_FLAG, current_arg) == 0) {
+            i++;
+            char* x_str = argv[i];
+            i++;
+            char* y_str = argv[i];
+
+            size_t x = (size_t)strtol(x_str, (char**)NULL, 10);
+            if (errno != 0) {
+                printf("Command line arguments could not be parsed!\n");
+                _exit(0);
+            }
+
+            size_t y = (size_t)strtol(y_str, (char**)NULL, 10);
+            if (errno != 0) {
+                printf("Command line arguments could not be parsed!\n");
+                _exit(0);
+            }
+
+            create_glider(buffer, x, y);
+        } else if (strcmp(ACORN_FLAG, current_arg) == 0) {
+            i++;
+            char* x_str = argv[i];
+            i++;
+            char* y_str = argv[i];
+
+            size_t x = (size_t)strtol(x_str, (char**)NULL, 10);
+            if (errno != 0) {
+                printf("Command line arguments could not be parsed!\n");
+                _exit(0);
+            }
+
+            size_t y = (size_t)strtol(y_str, (char**)NULL, 10);
+            if (errno != 0) {
+                printf("Command line arguments could not be parsed!\n");
+                _exit(0);
+            }
+
+            create_acorn(buffer, x, y);
+        } else if (strcmp(SQUARE_FLAG, current_arg) == 0) {
+            i++;
+            char* x_str = argv[i];
+            i++;
+            char* y_str = argv[i];
+
+            size_t x = (size_t)strtol(x_str, (char**)NULL, 10);
+            if (errno != 0) {
+                printf("Command line arguments could not be parsed!\n");
+                _exit(0);
+            }
+
+            size_t y = (size_t)strtol(y_str, (char**)NULL, 10);
+            if (errno != 0) {
+                printf("Command line arguments could not be parsed!\n");
+                _exit(0);
+            }
+
+            create_block(buffer, x, y);
+        }
+
+        i++;
     }
 }
 

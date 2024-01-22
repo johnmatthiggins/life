@@ -29,7 +29,12 @@
 #define DIAGONAL_LR_BLOCK "\xE2\x96\x9A"
 #define DIAGONAL_RL_BLOCK "\xE2\x96\x9E"
 
+#define GLIDER_FLAG "--glider"
+#define ACORN_FLAG  "--acorn"
+#define SQUARE_FLAG "--square"
+
 void load_zeros(uint8_t** buffer);
+void load_entities(int argc, char** argv, uint8_t** buffer);
 void free_screen_buffer(uint8_t** buffer);
 void create_glider(uint8_t** board, size_t x, size_t y);
 void create_block(uint8_t** board, size_t x, size_t y);
